@@ -1,0 +1,50 @@
+# ---------------- GENERAL ----------------
+seed: 42
+device: "cuda:0"           # "cpu" 또는 "cuda:id"
+amp: true                  # mixed-precision
+
+# --------------- DATA --------------------
+dataset_folder: "/home/jy1559/Mar2025_Module/Datasets"
+dataset_name: "Globo"
+train_batch_th: 10000      # 한 배치에 허용할 Σ(sess·inter²) upper-bound
+val_batch_th: 12000        # 검증(선택) — train보다 약간 크게
+test_batch_th: 15000       # 테스트  — 메모리 상황 보고 조정
+use_bucket_batching: true  # 길이 유사 세션끼리 버킷팅
+use_add_info: false        # add-info feature 사용 여부
+use_llm: false
+use_dt: false
+
+# --------------- MODEL -------------------
+embed_dim: 256             # 최종 token hidden dim
+n_layers: 2
+n_heads: 8
+d_ff: 256                 # FFN 내부 dim
+dropout: 0.1
+max_len: 128
+pe_method: "learn"         # Positional-Encoding 방법
+use_dt: true              # Δt 임베딩 사용 여부
+dt_method: "bucket"
+num_bucket: 32
+bucket_size: 2
+add_info_specs: []         # [('cat',card), ('num',1), …]  – 사용 시 채움
+
+# --------------- OPTIM -------------------
+epochs: 30
+optimizer: "adamw"
+lr: 1.0e-3
+weight_decay: 1.0e-2
+scheduler: "cosine"
+warmup_steps: 1000
+grad_clip: 1.0             # 0 → 미사용
+
+# --------------- LOSS --------------------
+strategy: "everysess_allinter"  # 선택 마스크 전략
+num_neg: 64                     # (1 pos + k-1 neg) 샘플 개수
+# compute_loss 는 CE 기반으로 동작 (BPR 아님) :contentReference[oaicite:0]{index=0}
+
+# --------------- W&B ---------------------
+wandb_project: "seqrec"
+wandb_mode: "online"      # offline / disabled
+run_name: "auto-${now:%Y%m%d-%H%M%S}"
+group: "baseline"
+tags: ["globo", "v0"]

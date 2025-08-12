@@ -1,0 +1,30 @@
+program: train.py
+method: random
+name: NARM_retail
+description: test sweep method
+project: August_Retail_Rocket_NARM_0
+entity: jy1559
+metric:
+  name: bestVal/HR@1
+  goal: maximize
+parameters:
+  model:
+    value: "NARM"
+  lr:
+    values: [0.1, 0.06, 0.03, 0.01, 0.006, 0.003, 0.001, 0.0005, 0.0001]
+  weight_decay:
+    values: [0.01, 0.0001]
+  embed_dim:
+    values: [64, 128, 256]
+  #hidden_dim:
+  #  values: [64, 128, 256]
+  dropout:
+    values: [0.0, 0.1, 0.3]
+  n_layers:
+    values: [1, 2, 4]
+  device:
+    value: "cuda:7"
+  epochs:
+    value: 5
+  candidate_emb:
+    value: "ID_64"
